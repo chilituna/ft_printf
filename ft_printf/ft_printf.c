@@ -6,7 +6,7 @@
 /*   By: aarponen <aarponen@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 16:10:31 by aarponen          #+#    #+#             */
-/*   Updated: 2023/07/12 10:25:11 by aarponen         ###   ########.fr       */
+/*   Updated: 2023/07/12 17:46:50 by aarponen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_printf(const char *input, ...)
 	int		len;
 
 	if (input == 0)
-		return (0);
+		return (-1);
 	len = 0;
 	va_start(args, input);
 	while (*input != '\0')
@@ -96,7 +96,7 @@ int	main(void)
 	printf("\nReturn: %d\n", printf("Also known as: %x and %X", u, u));
 	ft_printf("\nReturn: %d\n", ft_printf("You live in %p", ptr));
 	printf("\nReturn: %d\n", printf("You live in %p", ptr));
-	ft_printf(0);
-	printf(0);
+	ft_printf("\nReturn: %d\n", ft_printf(0));
+	printf("\nReturn: %d\n",  printf(0));
 	return (0);
 }*/
