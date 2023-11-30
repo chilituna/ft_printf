@@ -2,7 +2,7 @@
 42 Project ft_printf
 
 Summary: this project was pretty straigh-forward: recoding printf().
-Function has to handle the following conversions: cspdiuxX%
+Function has to handle the following conversions: cspdiuxX%.
 
 With this project I also learned about variadic functions.
 
