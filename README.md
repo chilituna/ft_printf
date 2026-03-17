@@ -12,7 +12,13 @@ The project recreates key behavior of the standard `printf` family by handling v
 
 This is a static library project, so there is no UI.
 
-- Placeholder - output comparison screenshot: `images/printf-compare.png`
+Main test file:
+
+![test main](images/test_main.png)
+
+Terminal output:
+
+![test terminal](images/test_terminal.png)
 
 ## Tech Stack
 
@@ -87,6 +93,14 @@ make re
 
 ### Use in Another C Project
 
+Build the library first (from repository root):
+
+```bash
+make -C ft_printf
+```
+
+Then compile your file by linking the generated archive directly:
+
 ```c
 #include "ft_printf.h"
 
@@ -98,7 +112,7 @@ int main(void)
 ```
 
 ```bash
-cc main.c -L./ft_printf -lftprintf -I./ft_printf -o program
+cc main.c ./ft_printf/libftprintf.a -I./ft_printf -o program
 ```
 
 ## Project Structure
