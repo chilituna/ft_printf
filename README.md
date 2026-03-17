@@ -1,137 +1,134 @@
-# ft_printf
+![ft_printf banner](images/ft_printf_banner.png)
 
-A custom implementation of the C standard library's `printf` function, built as part of the 42 curriculum.
+## Overview
 
-[![Score](https://img.shields.io/badge/Score-100%2F100-success?style=flat-square)](https://github.com/chilituna/ft_printf)
-[![42 School](https://img.shields.io/badge/Berlin-000000?style=flat-square&logo=42)](https://42berlin.de/)
+`ft_printf` was built as part of the 42 curriculum to deepen low-level C programming skills through a practical systems-style challenge.
 
-## 📋 Table of Contents
+The project recreates key behavior of the standard `printf` family by handling variadic arguments, parsing conversion specifiers, and dispatching each value to dedicated output routines. This helps treat formatted output as an explicit, testable implementation rather than a black-box library call.
 
-- [About](#about)
-- [Features](#features)
-- [Technical Implementation](#technical-implementation)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Function Prototype](#function-prototype)
-- [Supported Conversions](#supported-conversions)
-- [Project Structure](#project-structure)
-- [Skills Developed](#skills-developed)
+**Score: 100/100**
 
-## 🎯 About
+## Demo / Screenshots
 
-`ft_printf` is a recreation of the standard C library function `printf()`. This project demonstrates deep understanding of variadic functions, format parsing, type handling, and low-level output operations. The implementation handles multiple format specifiers and produces output identical to the original `printf` function.
+This is a static library project, so there is no UI.
 
-## ✨ Features
+- Placeholder - output comparison screenshot: `images/printf-compare.png`
 
-- **Full format specifier support** for common data types
-- **Memory-efficient** implementation without external dependencies
-- **Robust error handling** for edge cases
-- **Modular design** with separated concerns for maintainability
-- **100% compliance** with 42 project requirements
+## Tech Stack
 
-## 🔧 Technical Implementation
+- Language: C
+- Build system: Make
+- APIs and headers: `write`, `stdarg.h`, `unistd.h`
+- Output artifact: static library (`libftprintf.a`)
 
-The project is structured around a core parsing engine that:
+## Architecture / Implementation
 
-1. **Parses format strings** character by character
-2. **Identifies conversion specifiers** (%, c, s, d, etc.)
-3. **Handles variadic arguments** using `<stdarg.h>`
-4. **Dispatches to specialized handlers** for each data type
-5. **Returns the total number** of characters printed
+### Core Flow
 
-Key technical highlights:
-- Implementation of variadic functions using `va_list`, `va_start`, `va_arg`, and `va_end`
-- Custom number-to-string conversion for decimal, unsigned, and hexadecimal values
-- Pointer address formatting with hexadecimal representation
-- Character-by-character output using `write()` system call
+1. Iterate through the format string in `ft_printf.c`.
+2. Detect `%` tokens and validate supported conversions.
+3. Pull the next argument from `va_list`.
+4. Dispatch to conversion-specific helpers.
+5. Return the total number of printed characters.
 
-## 📦 Installation
+### Main Modules
 
-Clone the repository and compile the library:
+- `ft_printf.c`: parser loop, specifier checks, and dispatcher.
+- `ft_puttext.c`: `%c` and `%s` output helpers.
+- `ft_putnumber.c`: signed/unsigned decimal printing (`%d`, `%i`, `%u`).
+- `ft_puthex.c`: lowercase/uppercase hexadecimal conversion (`%x`, `%X`).
+- `ft_putpointer.c`: pointer formatting with `0x` prefix (`%p`).
+- `ft_printf.h`: public prototypes and shared includes.
+
+### Key Technical Decisions
+
+- Recursive conversion functions for integer, hex, and pointer output to keep logic compact and deterministic.
+- Direct writes to stdout via `write` for full control over emitted bytes.
+- Defensive handling of null values (`(null)` for strings and `(nil)` for pointers).
+
+## Features
+
+- Reimplementation of core `printf` behavior in pure C
+- Variadic argument handling with `va_list` APIs
+- Supported conversions: `%c`, `%s`, `%p`, `%d`, `%i`, `%u`, `%x`, `%X`, `%%`
+- Accurate character-count return value for each call
+- Modular source layout for easier maintenance and extension
+
+## Getting Started
+
+### Prerequisites
+
+- GCC or Clang
+- Make
+- Linux or macOS environment
+
+### Build the Library
+
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/chilituna/ft_printf.git
 cd ft_printf/ft_printf
+```
+
+2. Compile:
+
+```bash
 make
 ```
 
-This will generate `libftprintf.a` which can be linked to your projects.
+3. Optional cleanup targets:
 
-## 🚀 Usage
+```bash
+make clean
+make fclean
+make re
+```
 
-Include the header file and link the library:
+### Use in Another C Project
 
 ```c
 #include "ft_printf.h"
 
 int main(void)
 {
-    ft_printf("Hello, %s!\n", "World");
-    ft_printf("Number: %d\n", 42);
-    ft_printf("Hex: %x\n", 255);
-    ft_printf("Pointer: %p\n", &main);
+    ft_printf("Hello %s! Number: %d, Hex: %X\n", "world", 42, 42);
     return (0);
 }
 ```
 
-Compile with:
-
 ```bash
-gcc main.c -L. -lftprintf -o program
+cc main.c -L./ft_printf -lftprintf -I./ft_printf -o program
 ```
 
-## 📝 Function Prototype
+## Project Structure
 
-```c
-int ft_printf(const char *format, ...);
+```text
+.
+├── README.md
+└── ft_printf/
+    ├── Makefile          # Build rules for libftprintf.a
+    ├── ft_printf.h       # Public header and prototypes
+    ├── ft_printf.c       # Main parser and dispatcher
+    ├── ft_puttext.c      # Character and string output
+    ├── ft_putnumber.c    # Signed and unsigned decimal output
+    ├── ft_puthex.c       # Hexadecimal output helpers
+    └── ft_putpointer.c   # Pointer address formatting
 ```
 
-**Parameters:**
-- `format`: A string containing text and format specifiers
-- `...`: Variable number of arguments matching the format specifiers
+## Future Improvements
 
-**Return Value:**
-- The total number of characters printed
-- Negative value on error
+- Add automated tests that compare output and return values against libc `printf`
+- Add CI to build and run tests on each push
+- Extend support toward flags, width, and precision handling
+- Add benchmark scripts to measure performance across conversions
 
-## 🔤 Supported Conversions
+## What I Learned
 
-| Specifier | Description | Example |
-|-----------|-------------|---------|
-| `%c` | Single character | `ft_printf("%c", 'A')` → A |
-| `%s` | String of characters | `ft_printf("%s", "test")` → test |
-| `%p` | Pointer address | `ft_printf("%p", ptr)` → 0x7fff5fbff7a0 |
-| `%d` | Signed decimal integer | `ft_printf("%d", -42)` → -42 |
-| `%i` | Signed decimal integer | `ft_printf("%i", 42)` → 42 |
-| `%u` | Unsigned decimal integer | `ft_printf("%u", 42)` → 42 |
-| `%x` | Hexadecimal (lowercase) | `ft_printf("%x", 255)` → ff |
-| `%X` | Hexadecimal (uppercase) | `ft_printf("%X", 255)` → FF |
-| `%%` | Literal percent sign | `ft_printf("%%")` → % |
-
-## 📁 Project Structure
-
-```
-ft_printf/
-├── ft_printf.c       # Main function and format parsing
-├── ft_printf.h       # Header file with function prototypes
-├── ft_puthex.c       # Hexadecimal conversion handlers
-├── ft_putnumber.c    # Decimal and unsigned integer handlers
-├── ft_putpointer.c   # Pointer address formatting
-├── ft_puttext.c      # Character and string handlers
-└── Makefile          # Build configuration
-```
-
-## 💡 Skills Developed
-
-Through this project, I gained practical experience with:
-
-- **Variadic Functions**: Deep understanding of how C handles variable argument lists
-- **String Parsing**: Implementing robust format string interpretation
-- **Type Conversion**: Converting various data types to string representations
-- **Low-Level I/O**: Using system calls directly for output operations
-- **Memory Management**: Efficient handling of buffers and pointers
-- **Modular Programming**: Designing clean, maintainable code architecture
-- **Edge Case Handling**: Dealing with NULL pointers, overflow, and special values
+- Practical use of variadic functions (`va_start`, `va_arg`, `va_end`)
+- Reliable format parsing and conversion dispatch design
+- Recursive number conversion techniques in constrained C code
+- Better handling of edge cases and output contract consistency
 
 
 
