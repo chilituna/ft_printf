@@ -144,5 +144,11 @@ cc main.c ./ft_printf/libftprintf.a -I./ft_printf -o program
 - Recursive number conversion techniques in constrained C code
 - Better handling of edge cases and output contract consistency
 
+---
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
 
 
